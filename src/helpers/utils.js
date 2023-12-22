@@ -95,7 +95,7 @@ exports.notificationMail = async (userData) => {
 
   const mailObj = {
     email: userData.email,
-    subject: "Freedom notification",
+    subject: "Reefer notification",
     root: "../email-templates/notification.ejs",
     templateData: { name: name, msg: msg, url: redirectUrl },
   };
@@ -111,7 +111,7 @@ exports.channelNotificationEmail = async (userData) => {
 
   const mailObj = {
     email: userData.Email,
-    subject: "Freedom notification",
+    subject: "Reefer notification",
     root: "../email-templates/notification.ejs",
     templateData: { name: name, msg: msg, url: redirectUrl },
   };
@@ -131,14 +131,14 @@ exports.communityApproveEmail = async (profileId, isApprove) => {
       userData[0]?.FirstName + " " + userData[0]?.LastName;
     let msg = "";
     if (isApprove === "Y") {
-      msg = `Your Health Practitioner has been approved by Master Admin.`;
+      msg = `Your Dispensaries has been approved by Master Admin.`;
     } else {
-      msg = `Your Health Practitioner has been unapproved by Master Admin.`;
+      msg = `Your Dispensaries has been unapproved by Master Admin.`;
     }
     let redirectUrl = `${environment.FRONTEND_URL}`;
     const mailObj = {
       email: userData[0].Email,
-      subject: "Freedom notification",
+      subject: "Reefer notification",
       root: "../email-templates/notification.ejs",
       templateData: { name: name, msg: msg, url: redirectUrl },
     };

@@ -1,7 +1,7 @@
 {
   "name": "reefer-social-server",
   "version": "1.0.0",
-  "description": "HT Server",
+  "description": "RS Server",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
