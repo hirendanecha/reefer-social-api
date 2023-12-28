@@ -5,7 +5,8 @@ const { getPagination, getCount, getPaginationData } = require("../helpers/fn");
 
 // Admin Api //
 exports.findAllCommunity = async function (req, res) {
-  const { selectedCard, selectedCountry, selectedState, selectedAreas } = req.body;
+  const { selectedCard, selectedCountry, selectedState, selectedAreas } =
+    req.body;
   console.log(req.body);
   const searchData = await Community.findAllCommunity(
     selectedCard,
@@ -318,5 +319,60 @@ exports.getEmphasisAndArea = async function (req, res) {
     res.json(data);
   } else {
     res.status(404).send({ message: "not found!" });
+  }
+};
+
+exports.CreateAdvertizementLink = async function (req, res) {
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).send({ error: true, message: "Error in application" });
+  } else {
+    const communityLinkData = req.body;
+    console.log(communityLinkData);
+    Community.CreateAdvertizementLink(
+      communityLinkData,
+      function (err, community) {
+        if (err) {
+          return utils.send500(res, err);
+        } else {
+          return res.json({
+            error: false,
+            message: "Your community will be approve by admin",
+            data: community,
+          });
+        }
+      }
+    );
+  }
+};
+
+exports.editAdvertizeMentLink = async function (req, res) {
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).send({ error: true, message: "Error in application" });
+  } else {
+    const communityLinkData = req.body;
+    console.log(communityLinkData);
+    const data = await Community.editAdvertizeMentLink(communityLinkData);
+    if (data) {
+      res.json({
+        error: false,
+        message: "link update successfully",
+      });
+    } else {
+      res.status(500).json({
+        error: true,
+        message: "something went wrong!!",
+      });
+    }
+  }
+};
+exports.getLink = function (req, res) {
+  if (req.params.id) {
+    Community.getLink(req.params.id, function (err, data) {
+      if (err) return utils.send500(res, err);
+      res.json({
+        error: false,
+        data: data,
+      });
+    });
   }
 };
