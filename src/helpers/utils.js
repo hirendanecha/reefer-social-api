@@ -106,7 +106,7 @@ exports.notificationMail = async (userData) => {
 
 exports.channelNotificationEmail = async (userData) => {
   let name = userData?.Username;
-  let msg = `You have been assign in FreedomTube channel by the ReeferSocial Admin.
+  let msg = `You have been assign in ReeferSocial channel by the ReeferSocial Admin.
   To access your channel, log into your ReeferSocial account,click on the
   ReeferSocial icon at the top of the page,then click on My Channel.`;
   let redirectUrl = `${environment.FRONTEND_URL}`;
