@@ -63,14 +63,13 @@ exports.registrationMail = async (userData, userId) => {
 exports.forgotPasswordMail = async (user) => {
   console.log(user);
   if (user) {
-    let jwtSecretKey = environment.JWT_SECRET_KEY;
     let name = user?.Username || user?.FirstName + " " + user?.LastName;
     const token = jwt.sign(
       {
         userId: user?.Id,
       },
-      jwtSecretKey,
-      { expiresIn: "1 day" }
+      environment.JWT_SECRET_KEY,
+      { expiresIn: "1d" }
     );
 
     let forgotPasswordUrl = `${environment.FRONTEND_URL}reset-password/user?accesstoken=${token}`;
@@ -106,7 +105,7 @@ exports.notificationMail = async (userData) => {
 
 exports.channelNotificationEmail = async (userData) => {
   let name = userData?.Username;
-  let msg = `You have been assign in FreedomTube channel by the ReeferSocial Admin.
+  let msg = `You have been assign in ReeferSocial channel by the ReeferSocial Admin.
   To access your channel, log into your ReeferSocial account,click on the
   ReeferSocial icon at the top of the page,then click on My Channel.`;
   let redirectUrl = `${environment.FRONTEND_URL}`;
