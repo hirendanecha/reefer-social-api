@@ -71,11 +71,13 @@ exports.forgotPasswordMail = async (user) => {
       environment.JWT_SECRET_KEY,
       { expiresIn: "1d" }
     );
+    console.log('hi');
+    console.log(token);
 
     let forgotPasswordUrl = `${environment.FRONTEND_URL}reset-password/user?accesstoken=${token}`;
     const mailObj = {
       email: user?.Email,
-      subject: "Forgot password",
+      subject: "Password Reset Request - Reefer Social",
       root: "../email-templates/forgot-password.ejs",
       templateData: { name: name, url: forgotPasswordUrl },
     };

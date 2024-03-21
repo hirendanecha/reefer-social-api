@@ -270,7 +270,7 @@ exports.forgotPassword = async function (req, res) {
       if (data.messageId) {
         return res.json({
           error: false,
-          message: "please check your mail for reset password",
+          message: "Please check your mail for reset password",
         });
       } else {
         return res.json({ error: true, message: data.error });
@@ -278,7 +278,7 @@ exports.forgotPassword = async function (req, res) {
     } else {
       return res.status(404).json({
         error: true,
-        message: "please check your mail for reset password",
+        message: "Please check your mail for reset password",
       });
     }
   }
