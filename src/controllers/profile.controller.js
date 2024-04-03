@@ -101,7 +101,7 @@ exports.updateProfile = async function (req, res) {
     } else {
       return res.status(401).json({ message: "Unauthorized access" });
     }
-  };
+  }
 };
 
 const getUsername = async function (username, exisingusername) {
@@ -132,12 +132,19 @@ exports.editNotifications = async function (req, res) {
 
 exports.getNotificationById = async function (req, res) {
   const { id } = req.params;
-  const data = await Profile.getNotificationById(id);
-  return res.send({
-    error: false,
-    data: data,
-  });
+  const { page, size } = req.body;
+  const { limit, offset } = getPagination(page, size);
+  const notificationData = await Profile.getNotificationById(id, limit, offset);
+
+  return res.send(
+    getPaginationData(
+      { count: notificationData.count, docs: notificationData.data },
+      page,
+      limit
+    )
+  );
 };
+
 exports.getNotification = async function (req, res) {
   const { id } = req.params;
   const data = await Profile.getNotification(id);

@@ -44,7 +44,7 @@ exports.registrationMail = async (userData, userId) => {
       email: userData.Email,
     },
     jwtSecretKey,
-    { expiresIn: "730 days" }
+    { expiresIn: "15d" }
   );
 
   let registerUrl = `${environment.API_URL}customers/user/verification/${token}`;
@@ -71,7 +71,7 @@ exports.forgotPasswordMail = async (user) => {
       environment.JWT_SECRET_KEY,
       { expiresIn: "1d" }
     );
-    console.log('hi');
+    console.log("hi");
     console.log(token);
 
     let forgotPasswordUrl = `${environment.FRONTEND_URL}reset-password/user?accesstoken=${token}`;
