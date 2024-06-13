@@ -1,18 +1,28 @@
 const Community = require("../models/community.model");
+const Dispensary = require("../models/dispensary.model");
 const User = require("../models/user.model");
 const utils = require("../helpers/utils");
 const { getPagination, getCount, getPaginationData } = require("../helpers/fn");
 
 // Admin Api //
 exports.findAllCommunity = async function (req, res) {
-  const { selectedCard, selectedCountry, selectedState, selectedAreas } =
-    req.body;
-  console.log(req.body);
-  const searchData = await Community.findAllCommunity(
-    selectedCard,
-    selectedCountry,
+  const {
     selectedState,
-    selectedAreas
+    selectedCountry,
+    zipCode,
+    dispensaryName,
+    page,
+    size,
+  } = req.body;
+  const { limit, offset } = getPagination(page, size);
+  console.log(req.body);
+  const searchData = await Dispensary.findDispensary(
+    selectedState,
+    selectedCountry,
+    zipCode,
+    dispensaryName,
+    limit,
+    offset
   );
   return res.send(searchData);
 };
