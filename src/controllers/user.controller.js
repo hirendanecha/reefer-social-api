@@ -447,7 +447,7 @@ exports.verification = function (req, res) {
     const token = await generateJwtToken(data);
     console.log(token);
     return res.redirect(
-      `${environments.FRONTEND_URL}/healing-registration?token=${token}`
+      `${environments.FRONTEND_URL}/reefer-registration?token=${token}`
     );
   });
 };
