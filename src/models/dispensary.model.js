@@ -14,6 +14,7 @@ var Dispensary = function (dispensaries) {
   this.zip = dispensaries?.zip;
   this.address = dispensaries?.address;
   this.phone = dispensaries?.phone;
+  this.profileId = dispensaries?.profileId;
 };
 
 Dispensary.findDispensary = async function (
@@ -24,28 +25,51 @@ Dispensary.findDispensary = async function (
   limit,
   offset
 ) {
-  let whereCondition = "";
+  let whereCondition = "d.isApprove = 'Y'";
   if (selectedCountry) {
-    whereCondition = `d.country = '${selectedCountry}' ${
-      selectedState ? `AND d.state = '${selectedState}'` : ""
-    }`;
-    if (zipCode) {
-      whereCondition += ` AND d.zip = '${zipCode}'`;
-    }
-    if (dispensaryName) {
-      whereCondition += ` AND d.name = '${dispensaryName}'`;
-    }
+    whereCondition = ` AND d.country = '${selectedCountry}'`;
+  }
+  if (selectedState) {
+    whereCondition += ` AND d.state = '${selectedState}'`;
+  }
+
+  if (zipCode) {
+    whereCondition += ` AND d.zip = '${zipCode}'`;
+  }
+  if (dispensaryName) {
+    whereCondition += ` AND d.name LIKE '%${dispensaryName}%'`;
   }
 
   let query = "";
-  query = `select d.* from dispensaries as d  ${
-    whereCondition ? `where ${whereCondition}` : ""
-  } limit ${limit} offset ${offset};`;
+  query = `select d.* from dispensaries as d where ${whereCondition} limit ${limit} offset ${offset};`;
   console.log("query===>", query);
   const dispensaryList = await executeQuery(query);
   return dispensaryList;
 };
 
+Dispensary.create = async function (dispensaryData, result) {
+  let communityId = null;
+  db.query(
+    "INSERT INTO dispensaries set ?",
+    dispensaryData,
+    function (err, res) {
+      if (err) {
+        result(err, null);
+      } else {
+        result(null, res.insertId);
+      }
+    }
+  );
+
+  // const query = communityData.Id
+  //   ? '"update community set ? where Id = ?'
+  //   : '"INSERT INTO community set ?';
+  // const values = communityData.Id
+  //   ? [communityData, communityData.Id]
+  //   : { communityData };
+  // const community = await executeQuery(query, values);
+  // return community;
+};
 Dispensary.findCommunityById = async function (id) {
   const query1 =
     "select c.*,p.Username,count(cm.profileId) as members from community as c left join profile as p on p.ID = c.profileId left join communityMembers as cm on cm.communityId = c.Id where c.Id=?;";
@@ -75,6 +99,46 @@ Dispensary.findCommunityBySlug = async function (slug) {
   }
 
   return community;
+};
+
+Dispensary.getCommunities = async function (
+  limit,
+  offset,
+  search,
+  startDate,
+  endDate
+) {
+  let whereCondition = `${search ? `d.name LIKE '%${search}%'` : ""}`;
+  if (startDate && endDate) {
+    whereCondition += `AND d.createdDate >= '${startDate}' AND d.createdDate <= '${endDate}'`;
+    console.log(whereCondition);
+  } else if (startDate) {
+    whereCondition += `AND d.createdDate >= '${startDate}'`;
+  } else if (endDate) {
+    whereCondition += `AND d.createdDate <= '${endDate}'`;
+  }
+  const searchCount = await executeQuery(
+    `SELECT count(d.id) as count FROM dispensary as d WHERE ${whereCondition}`
+  );
+  const searchData = await executeQuery(
+    `select d.* from dispensary as d where ${whereCondition} GROUP BY d.id order by d.createdDate desc limit ? offset ?`,
+    [limit, offset]
+  );
+  return {
+    count: searchCount?.[0]?.count || 0,
+    data: searchData,
+  };
+  // db.query(
+  //   "select c.*,count(cm.profileId) as members from community as c left join communityMembers as cm on cm.communityId = c.Id where c.isApprove='Y' GROUP BY c.Id order by c.creationDate desc limit ? offset ?",
+  //   [limit, offset],
+  //   function (err, res) {
+  //     if (err) {
+  //       result(err, null);
+  //     } else {
+  //       result(null, res);
+  //     }
+  //   }
+  // );
 };
 
 module.exports = Dispensary;

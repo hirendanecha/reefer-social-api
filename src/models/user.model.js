@@ -118,7 +118,9 @@ User.create = function (userData, result) {
 
 User.findAndSearchAll = async (limit, offset, search, startDate, endDate) => {
   let whereCondition = `u.IsAdmin != 'Y' ${
-    search ? `AND u.Username LIKE '%${search}%' OR u.Email LIKE '%${search}%'` : ""
+    search
+      ? `AND u.Username LIKE '%${search}%' OR u.Email LIKE '%${search}%'`
+      : ""
   }`;
 
   if (startDate && endDate) {
@@ -471,10 +473,13 @@ User.setPassword = async function (user_id, password) {
 };
 
 User.getStats = async function (countryCode) {
-  const query =
-    "select state,country_code from zip_us where country_code = ? and state != '' group by state";
-  const values = [countryCode];
-  const stats = await executeQuery(query, values);
+  let whereCondition = "state != ''";
+  if (countryCode) {
+    whereCondition += ` AND country_code = '${countryCode}'`;
+  }
+  const query = `select state,country_code from zip_us where ${whereCondition} group by state, country_code`;
+  // const values = [countryCode];
+  const stats = await executeQuery(query);
   return stats;
 };
 module.exports = User;

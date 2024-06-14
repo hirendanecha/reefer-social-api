@@ -492,14 +492,14 @@ exports.logout = function (req, res) {
 
 exports.getStats = async function (req, res) {
   console.log("innn");
-  const countryCode = req?.query?.countryCode;
-  if (countryCode) {
-    const states = await User.getStats(countryCode);
-    if (states) {
-      res.json(states);
-    } else {
-      res.status(404).send({ message: "not found" });
-    }
+  const countryCode = req?.query?.countryCode || null;
+  // if (countryCode) {
+  // }
+  const states = await User.getStats(countryCode);
+  if (states) {
+    res.json(states);
+  } else {
+    res.status(404).send({ message: "not found" });
   }
 };
 

@@ -27,13 +27,12 @@ exports.findAllCommunity = async function (req, res) {
   return res.send(searchData);
 };
 exports.getCommunities = async function (req, res) {
-  const { page, size, search, pageType, startDate, endDate } = req.body;
+  const { page, size, search, startDate, endDate } = req.body;
   const { limit, offset } = getPagination(page, size);
-  const searchData = await Community.getCommunities(
+  const searchData = await Dispensary.getCommunities(
     limit,
     offset,
     search,
-    pageType,
     startDate,
     endDate
   );
@@ -67,23 +66,16 @@ exports.createCommunity = async function (req, res) {
   if (Object.keys(req.body).length === 0) {
     res.status(400).send({ error: true, message: "Error in application" });
   } else {
-    const communityData = new Community(req.body);
-    console.log(communityData);
-    Community.create(communityData, async function (err, community) {
+    const dispensaryData = new Dispensary(req.body);
+    console.log(dispensaryData);
+    Dispensary.create(dispensaryData, async function (err, dispensary) {
       if (err) {
         return utils.send500(res, err);
       } else {
-        if (community) {
-          const emphasisData = req.body.emphasis;
-          const areasData = req.body.areas;
-          const emphasis = await Community.addEmphasis(community, emphasisData);
-          const areas = await Community.addAreas(community, areasData);
-          console.log(emphasis, areas);
-        }
         return res.json({
           error: false,
-          message: "Your community will be approve by admin",
-          data: community,
+          message: "Your dispensary will be approve by admin",
+          data: dispensary,
         });
       }
     });
