@@ -100,11 +100,11 @@ exports.editCommunity = async function name(req, res) {
 };
 
 exports.approveCommunity = function (req, res) {
-  console.log(req.params.id, req.query.IsApprove);
+  console.log(req.params.id, req.query.isApprove);
   const communityId = req.params.id;
-  const isApprove = req.query.IsApprove;
+  const isApprove = req.query.isApprove;
   const profileId = req.query.profileId;
-  Community.approveCommunity(
+  Dispensary.approveCommunity(
     communityId,
     isApprove,
     async function (err, result) {
@@ -116,12 +116,12 @@ exports.approveCommunity = function (req, res) {
         if (isApprove === "Y") {
           res.json({
             error: false,
-            message: "Community approved successfully",
+            message: "Dispensaries approved successfully",
           });
         } else {
           res.json({
             error: false,
-            message: "Community unapproved successfully",
+            message: "Dispensaries unapproved successfully",
           });
         }
       }
@@ -149,7 +149,7 @@ exports.changeAccountType = function (req, res) {
 
 exports.deleteCommunity = function (req, res) {
   if (req.params.id) {
-    Community.deleteCommunity(req.params.id, function (err, result) {
+    Dispensary.deleteCommunity(req.params.id, function (err, result) {
       if (err) return utils.send500(res, err);
       res.json({
         error: false,

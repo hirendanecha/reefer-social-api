@@ -110,18 +110,34 @@ Dispensary.getCommunities = async function (
 ) {
   let whereCondition = `${search ? `d.name LIKE '%${search}%'` : ""}`;
   if (startDate && endDate) {
-    whereCondition += `AND d.createdDate >= '${startDate}' AND d.createdDate <= '${endDate}'`;
+    whereCondition += `${
+      search
+        ? `AND d.createdDate >= '${startDate}' AND d.createdDate <= '${endDate}'`
+        : `d.createdDate >= '${startDate}' AND d.createdDate <= '${endDate}'`
+    }`;
     console.log(whereCondition);
   } else if (startDate) {
-    whereCondition += `AND d.createdDate >= '${startDate}'`;
+    whereCondition += `${
+      search
+        ? `AND d.createdDate >= '${startDate}'`
+        : `d.createdDate >= '${startDate}'`
+    } `;
   } else if (endDate) {
-    whereCondition += `AND d.createdDate <= '${endDate}'`;
+    whereCondition += `${
+      search
+        ? `AND d.createdDate >= '${startDate}'`
+        : `d.createdDate <= '${endDate}'`
+    }`;
   }
   const searchCount = await executeQuery(
-    `SELECT count(d.id) as count FROM dispensary as d WHERE ${whereCondition}`
+    `SELECT count(d.id) as count FROM dispensaries as d ${
+      whereCondition ? `WHERE ${whereCondition}` : ""
+    } `
   );
   const searchData = await executeQuery(
-    `select d.* from dispensary as d where ${whereCondition} GROUP BY d.id order by d.createdDate desc limit ? offset ?`,
+    `select d.* from dispensaries as d ${
+      whereCondition ? `WHERE ${whereCondition}` : ""
+    } GROUP BY d.id order by d.createdDate desc limit ? offset ?`,
     [limit, offset]
   );
   return {
@@ -139,6 +155,32 @@ Dispensary.getCommunities = async function (
   //     }
   //   }
   // );
+};
+
+Dispensary.approveCommunity = function (communityId, isApprove, result) {
+  db.query(
+    "UPDATE dispensaries SET isApprove=? where id=?",
+    [isApprove, communityId],
+    function (err, res) {
+      if (err) {
+        console.log(err);
+        result(err, null);
+      } else {
+        console.log(res);
+        result(null, res);
+      }
+    }
+  );
+};
+
+Dispensary.deleteCommunity = function (id, result) {
+  db.query("delete from dispensary where id=?", id, function (err, res) {
+    if (err) {
+      result(err, null);
+    } else {
+      result(null, res);
+    }
+  });
 };
 
 module.exports = Dispensary;
