@@ -174,7 +174,7 @@ Dispensary.approveCommunity = function (communityId, isApprove, result) {
 };
 
 Dispensary.deleteCommunity = function (id, result) {
-  db.query("delete from dispensary where id=?", id, function (err, res) {
+  db.query("delete from dispensaries where id=?", id, function (err, res) {
     if (err) {
       result(err, null);
     } else {
