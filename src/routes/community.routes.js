@@ -28,6 +28,7 @@ router.get("/change-user-type/:id", communityController.changeAccountType);
 router.get("/files/:folder/:id", utilsController.getFiles);
 router.post("/upload-community", utilsController.uploadPostImage);
 router.post("/create", communityController.createCommunity);
+router.post("/create-page", communityController.createPage);
 router.post(
   "/create-advertizement-link",
   communityController.CreateAdvertizementLink

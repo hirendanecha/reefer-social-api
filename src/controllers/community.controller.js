@@ -81,6 +81,26 @@ exports.createCommunity = async function (req, res) {
     });
   }
 };
+
+exports.createPage = async function (req, res) {
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).send({ error: true, message: "Error in application" });
+  } else {
+    const dispensaryData = new Community(req.body);
+    console.log(dispensaryData);
+    Community.create(dispensaryData, async function (err, dispensary) {
+      if (err) {
+        return utils.send500(res, err);
+      } else {
+        return res.json({
+          error: false,
+          message: "Your dispensary will be approve by admin",
+          data: dispensary,
+        });
+      }
+    });
+  }
+};
 exports.editCommunity = async function name(req, res) {
   const Id = req.params.id;
   const communityData = new Community(req.body);
